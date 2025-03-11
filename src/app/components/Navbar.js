@@ -1,12 +1,11 @@
 // components/Navbar.js
 import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline'
+import { FaChess } from "react-icons/fa";
 
 const navigation = [
-  // { name: 'Dashboard', href: '#', current: true },
-  // { name: 'Team', href: '#', current: false },
-  // { name: 'Projects', href: '#', current: false },
-  // { name: 'Calendar', href: '#', current: false },
+  { name: 'Dashboard', href:'/dashboard', current: false },
+  { name: 'Home', href:'/', current: false },
 ]
 
 function classNames(...classes) {
@@ -28,12 +27,8 @@ export default function NavBar() {
             </DisclosureButton>
           </div>
           <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
-            <div className="flex shrink-0 items-center">
-              <img
-                alt="Your Company"
-                src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=500"
-                className="h-8 w-auto"
-              />
+            <div className="flex items-center">
+              <FaChess className='text-white text-xl lg:text-3xl'/>
             </div>
             <div className="hidden sm:ml-6 sm:block">
               <div className="flex space-x-4">
