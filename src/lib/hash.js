@@ -4,7 +4,7 @@ import crypto from "crypto";
 /**
  * Example:
  * hashcode = hash(req.body.password)
- * storetomongodb(req.body.username, req.body.password)
+ * storetomongodb(req.body.username, hashcode)
  */
 export function hash(password) {
     const salt = crypto.randomBytes(16).toString("hex");
