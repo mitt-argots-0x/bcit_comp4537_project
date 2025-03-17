@@ -1,8 +1,10 @@
 'use client';
 import { useEffect, useState } from "react"
 import { FaChess } from "react-icons/fa"
+import { useRouter } from "next/navigation";
 
 export default function Signup() {
+  const router = useRouter();
   const [formData, setFormData] = useState({ email: '', password: '', confirmPassword: '' });
   const [message, setMessage] = useState('');
 
@@ -50,6 +52,7 @@ export default function Signup() {
         sessionStorage.removeItem("formData"); // Clear stored data on successful submission
         sessionStorage.setItem("email", data.email);
         sessionStorage.setItem("sessionToken", data.sessionToken);
+        router.push('/dashboard');
       }
     } catch (error) {
       setMessage("Submission failed");

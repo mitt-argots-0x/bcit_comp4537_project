@@ -35,6 +35,10 @@ async function connectToDatabase() {
   global.mongoose = cachedClient;
   global.db = cachedDb;
 
+  // Remove Expired sessions
+  const now = new Date();
+  const deleteResult = await db.collection('sessions').deleteMany({ expiry: { $lt: now } });
+
   return { client, db };
 }
 

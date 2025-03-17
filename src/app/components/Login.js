@@ -1,9 +1,10 @@
 'use client'
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function Login() {
-
+  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -25,6 +26,12 @@ export default function Login() {
       console.log(sessionStorage.getItem("sessionToken", data.sessionToken));
 
       console.log(data)
+
+      if (data.email === "admin@admin.com") {
+        router.push('/admin');
+      } else {
+        router.push('/dashboard')
+      }
     } catch (error) {
       console.log(error);
     }
