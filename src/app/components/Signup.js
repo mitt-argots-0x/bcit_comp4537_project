@@ -4,7 +4,7 @@ import { FaChess } from "react-icons/fa"
 
 export default function Signup() {
   const [formData, setFormData] = useState({ email: '', password: '', confirmPassword: '' });
-  const [message, setMessage] = useState(''); // Error user feedback
+  const [message, setMessage] = useState('');
 
   // Load saved form data from localStorage when the component mounts
   useEffect(() => {
@@ -24,7 +24,7 @@ export default function Signup() {
   };
 
   const handleSubmit = async (e) => {
-
+    e.preventDefault();
     try {
       const response = await fetch("/api/signup", {
         method: "POST",
@@ -48,6 +48,7 @@ export default function Signup() {
         setMessage(data.message);
         setFormData({ email: "", password: "", confirmPassword: "" }); // Clear form on success
         sessionStorage.removeItem("formData"); // Clear stored data on successful submission
+        
       }
     } catch (error) {
       setMessage("Submission failed");
