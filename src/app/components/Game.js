@@ -9,7 +9,7 @@ const Game = () => {
   const [isWebSocketStarted, setIsWebSocketStarted] = useState(false);
   const [cameraPermission, setCameraPermission] = useState(null);
   const [cameraError, setCameraError] = useState(null);
-
+  const BACKEND_IP = "165.227.43.219";
   // Check Camera Permission
   useEffect(() => {
     async function checkPermission() {
@@ -132,7 +132,7 @@ const Game = () => {
         console.log("🔄 Starting WebSocket connection...");
         
         const protocol = window.location.protocol === "https:" ? "wss://" : "ws://";
-        const backendURL = `${protocol}localhost:8000/video-detect`;
+        const backendURL = `${protocol}${BACKEND_IP}`;
         console.log(`🔗 Connecting to: ${backendURL}`);
 
         const socket = new WebSocket(backendURL);
