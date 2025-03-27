@@ -220,21 +220,19 @@ const Game = () => {
       return;
     }
 
-    const captureFrame = () => {
-      // Direct approach to convert canvas to blob
-      canvas.toBlob(
-        (blob) => {
-          if (blob && ws.readyState === WebSocket.OPEN) {
-            ws.send(blob);
-            console.log("📤 Sent frame");
-          } else {
-            console.log("⚠️ WebSocket not ready, skipping frame");
-          }
-        },
-        "image/jpeg",
-        0.8
-      );
-    };
+    canvas.toBlob(
+      async (blob) => {
+        if (blob && ws.readyState === WebSocket.OPEN) {
+          const arrayBuffer = await blob.arrayBuffer();
+          ws.send(arrayBuffer); // 👈 send as raw binary
+          console.log("📤 Sent frame (binary)");
+        } else {
+          console.log("⚠️ WebSocket not ready, skipping frame");
+        }
+      },
+      "image/jpeg",
+      0.8
+    );
 
     console.log("🎥 Starting frame capture");
     const interval = setInterval(captureFrame, 500);
