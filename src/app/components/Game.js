@@ -9,7 +9,7 @@ const Game = () => {
   const [isWebSocketStarted, setIsWebSocketStarted] = useState(false);
   const [cameraPermission, setCameraPermission] = useState(null);
   const [cameraError, setCameraError] = useState(null);
-  const BACKEND_IP = "hammerhead-app-4s7v6.ondigitalocean.app";
+  const BACKEND_IP = "coral-app-mh395.ondigitalocean.app";
   // Check Camera Permission
   useEffect(() => {
     async function checkPermission() {
