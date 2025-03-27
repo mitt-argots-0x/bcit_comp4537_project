@@ -9,7 +9,7 @@ const Game = () => {
   const [isWebSocketStarted, setIsWebSocketStarted] = useState(false);
   const [cameraPermission, setCameraPermission] = useState(null);
   const [cameraError, setCameraError] = useState(null);
-  const BACKEND_IP = process.env.BACKEND_IP || "localhost";
+  const BACKEND_IP = process.env.BACKEND_IP;
   // Check Camera Permission
   useEffect(() => {
     async function checkPermission() {
@@ -37,7 +37,6 @@ const Game = () => {
         setCameraPermission(false);
       }
     }
-
     checkPermission();
   }, []);
 
