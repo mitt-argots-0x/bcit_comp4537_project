@@ -9,7 +9,7 @@ const Game = () => {
   const [isWebSocketStarted, setIsWebSocketStarted] = useState(false);
   const [cameraPermission, setCameraPermission] = useState(null);
   const [cameraError, setCameraError] = useState(null);
-  const BACKEND_IP = "coral-app-mh395.ondigitalocean.app";
+  const BACKEND_IP = "localhost:80";
   // Check Camera Permission
   useEffect(() => {
     async function checkPermission() {
@@ -126,77 +126,62 @@ const Game = () => {
   // Start/Stop WebSocket Connection
   const toggleWebSocket = () => {
     if (isWebSocketStarted) {
-      // Stop the connection
       console.log("🛑 Stopping WebSocket connection...");
       if (ws) {
         ws.close();
-        setWs(null);
       }
       setIsWebSocketStarted(false);
       setDetectedCards([]);
-    } else {
-      // Start the connection
-      try {
-        setIsWebSocketStarted(true);
-        console.log("🔄 Starting WebSocket connection...");
-
-        const protocol =
-          window.location.protocol === "https:" ? "wss://" : "ws://";
-        const backendURL = `${protocol}${BACKEND_IP}/video-detect`;
-        console.log(`🔗 Connecting to: ${backendURL}`);
-
-        const socket = new WebSocket(backendURL);
-        setWs(socket);
-
-        socket.onopen = () => {
-          console.log("✅ WebSocket connection established");
-          // Start sending frames immediately after connection is established
-          const canvas = canvasRef.current;
-          if (canvas) {
-            console.log("🎥 Canvas ready, starting frame capture");
-          } else {
-            console.error("❌ Canvas not found");
+      return;
+    }
+  
+    try {
+      console.log("🔄 Starting WebSocket connection...");
+      const protocol = window.location.protocol === "https:" ? "wss://" : "ws://";
+      const backendURL = `${protocol}${BACKEND_IP}/video-detect`;
+      console.log(`🔗 Connecting to: ${backendURL}`);
+  
+      const socket = new WebSocket(backendURL);
+  
+      socket.onopen = () => {
+        console.log("✅ WebSocket connection established");
+        setWs(socket); // 👈 Only set after connected
+        setIsWebSocketStarted(true); // 👈 Triggers useEffect now
+      };
+  
+      socket.onmessage = (event) => {
+        try {
+          const data = JSON.parse(event.data);
+          console.log("📥 Received data:", data);
+  
+          if (data.error) {
+            console.error("❌ Server error:", data.error);
+          } else if (data.detections) {
+            setDetectedCards(data.detections);
           }
-        };
-
-        socket.onmessage = (event) => {
-          try {
-            const data = JSON.parse(event.data);
-            console.log("📥 Received data:", data);
-
-            if (data.error) {
-              console.error("❌ Server error:", data.error);
-              return;
-            } else if (data.info) {
-              console.log("ℹ️ Server info:", data.info);
-              return;
-            } else if (data.detections) {
-              console.log(`🎴 Detected ${data.detections.length} cards`);
-              setDetectedCards(data.detections);
-            }
-          } catch (error) {
-            console.error("❌ Error parsing WebSocket message:", error);
-          }
-        };
-
-        socket.onerror = (error) => {
-          console.error("❌ WebSocket Error:", error);
-          setIsWebSocketStarted(false);
-          setWs(null);
-        };
-
-        socket.onclose = (event) => {
-          console.log("🔌 WebSocket closed", event.code, event.reason);
-          setIsWebSocketStarted(false);
-          setWs(null);
-        };
-      } catch (error) {
-        console.error("❌ Error creating WebSocket:", error);
+        } catch (error) {
+          console.error("❌ Error parsing WebSocket message:", error);
+        }
+      };
+  
+      socket.onerror = (error) => {
+        console.error("❌ WebSocket Error:", error);
         setIsWebSocketStarted(false);
         setWs(null);
-      }
+      };
+  
+      socket.onclose = (event) => {
+        console.log("🔌 WebSocket closed", event.code, event.reason);
+        setIsWebSocketStarted(false);
+        setWs(null);
+      };
+    } catch (error) {
+      console.error("❌ Error creating WebSocket:", error);
+      setIsWebSocketStarted(false);
+      setWs(null);
     }
   };
+  
 
   // Capture and send frames to WebSocket
   useEffect(() => {
@@ -207,41 +192,39 @@ const Game = () => {
       });
       return;
     }
-
+  
     const canvas = canvasRef.current;
-    if (!canvas) {
-      console.error("❌ Canvas not available");
+    const ctx = canvas?.getContext("2d");
+  
+    if (!canvas || !ctx) {
+      console.error("❌ Canvas or context not available");
       return;
     }
-
-    const ctx = canvas.getContext("2d");
-    if (!ctx) {
-      console.error("❌ Canvas context not available");
-      return;
-    }
-
-    canvas.toBlob(
-      async (blob) => {
-        if (blob && ws.readyState === WebSocket.OPEN) {
-          const arrayBuffer = await blob.arrayBuffer();
-          ws.send(arrayBuffer); // 👈 send as raw binary
-          console.log("📤 Sent frame (binary)");
-        } else {
-          console.log("⚠️ WebSocket not ready, skipping frame");
-        }
-      },
-      "image/jpeg",
-      0.8
-    );
-
+  
+    const captureFrame = () => {
+      canvas.toBlob(
+        async (blob) => {
+          if (blob && ws.readyState === WebSocket.OPEN) {
+            const arrayBuffer = await blob.arrayBuffer();
+            ws.send(arrayBuffer);
+            console.log("📤 Sent frame (binary)");
+          } else {
+            console.warn("⚠️ WebSocket not ready, skipping frame");
+          }
+        },
+        "image/jpeg",
+        0.8
+      );
+    };
+  
     console.log("🎥 Starting frame capture");
     const interval = setInterval(captureFrame, 500);
+  
     return () => {
       console.log("🛑 Stopping frame capture");
       clearInterval(interval);
     };
   }, [ws, isWebSocketStarted]);
-
   return (
     <div className="flex flex-col items-center justify-center h-screen bg-gray-900 text-white">
       <h1 className="text-3xl font-bold mb-4">Edge21</h1>
