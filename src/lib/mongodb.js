@@ -15,7 +15,7 @@ if (!MONGODB_DB) {
 let cachedClient = global.mongoose;
 let cachedDb = global.db;
 
-async function connectToDatabase() {
+export default async function connectToDatabase() {
   if (cachedClient && cachedDb) {
     return { client: cachedClient, db: cachedDb };
   }
@@ -41,5 +41,3 @@ async function connectToDatabase() {
 
   return { client, db };
 }
-
-export default connectToDatabase;

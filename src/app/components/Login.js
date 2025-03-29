@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { TbCards } from 'react-icons/tb';
+import { ToastContainer, toast } from 'react-toastify';
 
 export default function Login() {
   const router = useRouter();
@@ -19,7 +21,12 @@ export default function Login() {
       });
 
       const data = await response.json();
-      console.log(data);
+
+      if (!response.ok) {
+        toast.error(data.message);
+        return;
+      }
+
       sessionStorage.setItem("email", data.email);
       
       sessionStorage.setItem("sessionToken", data.sessionToken);
@@ -30,20 +37,23 @@ export default function Login() {
       if (data.email === "admin@admin.com") {
         router.push('/admin');
       } else {
-        router.push('/dashboard')
+        router.push('/dashboard');
       }
     } catch (error) {
       console.log(error);
     }
   }
+
   return (
     <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
+      <div className='flex absolute bottom-0 right-0'>
+        <ToastContainer position="bottom-right"/>
+      </div>
+
       <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-        <img
-          alt="Your Company"
-          src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=600"
-          className="mx-auto h-10 w-auto"
-        />
+        <div className='w-full h-full flex justify-center items-center'>
+          <TbCards className='text-5xl'/>
+        </div>
         <h2 className="mt-10 text-center text-2xl/9 font-bold tracking-tight text-gray-900">
           Sign in to your account
         </h2>
