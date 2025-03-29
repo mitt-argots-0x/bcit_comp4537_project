@@ -2,6 +2,7 @@
 import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import { FaChess } from "react-icons/fa";
+import { TbCards } from 'react-icons/tb'
 
 const navigation = [
   { name: 'Dashboard', href:'/dashboard', current: false },
@@ -27,9 +28,9 @@ export default function NavBar() {
             </DisclosureButton>
           </div>
           <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
-            <div className="flex items-center">
-              <FaChess className='text-white text-xl lg:text-3xl'/>
-            </div>
+            <a className="flex items-center" href='/'>
+              <TbCards className='text-white text-xl lg:text-3xl'/>
+            </a>
             <div className="hidden sm:ml-6 sm:block">
               <div className="flex space-x-4">
                 {navigation.map((item) => (

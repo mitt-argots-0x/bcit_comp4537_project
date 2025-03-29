@@ -14,4 +14,8 @@ export async function POST(req) {
             error: "Something went wrong"
         }), { status: 500, headers: { "Content-Type": "application/json" } });
     }
+
+    return  new Response(JSON.stringify({
+        message: "Something Redirected"
+    }), { status: 308, headers: { "Content-Type": "application/json" } });
 }

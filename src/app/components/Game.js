@@ -19,21 +19,21 @@ const Game = () => {
         });
 
         if (permissionStatus.state === "granted") {
-          console.log("✅ Camera permission granted.");
+          console.log("Camera permission granted.");
           setCameraPermission(true);
           startCamera(); // Start camera immediately
         } else if (permissionStatus.state === "denied") {
-          console.error("❌ Camera permission denied.");
+          console.error("Camera permission denied.");
           setCameraPermission(false);
           setCameraError(
             "Camera access is blocked. Please enable it in your browser settings."
           );
         } else {
-          console.log("🔔 Asking user for camera permission...");
+          console.log("Asking user for camera permission...");
           setCameraPermission(null);
         }
       } catch (error) {
-        console.error("❌ Error checking camera permission:", error);
+        console.error("Error checking camera permission:", error);
         setCameraPermission(false);
       }
     }
@@ -50,7 +50,7 @@ const Game = () => {
       );
 
       if (videoDevices.length === 0) {
-        throw new Error("❌ No cameras found.");
+        throw new Error("No cameras found.");
       }
 
       const selectedCamera = videoDevices[videoDevices.length - 1].deviceId;
@@ -69,7 +69,7 @@ const Game = () => {
       if (video) {
         video.srcObject = stream;
         video.onloadedmetadata = () => video.play();
-        console.log("✅ Camera stream loaded!");
+        console.log("Camera stream loaded!");
 
         const drawVideoOnCanvas = () => {
           const canvas = canvasRef.current;
@@ -86,7 +86,7 @@ const Game = () => {
         requestAnimationFrame(drawVideoOnCanvas);
       }
     } catch (err) {
-      console.error("❌ Camera access error:", err);
+      console.error("Camera access error:", err);
       setCameraError(err.message || "Camera error occurred.");
     }
   }
@@ -126,7 +126,7 @@ const Game = () => {
   // Start/Stop WebSocket Connection
   const toggleWebSocket = () => {
     if (isWebSocketStarted) {
-      console.log("🛑 Stopping WebSocket connection...");
+      console.log("Stopping WebSocket connection...");
       if (ws) {
         ws.close();
       }
@@ -144,7 +144,7 @@ const Game = () => {
       const socket = new WebSocket(backendURL);
   
       socket.onopen = () => {
-        console.log("✅ WebSocket connection established");
+        console.log("WebSocket connection established");
         setWs(socket); // 👈 Only set after connected
         setIsWebSocketStarted(true); // 👈 Triggers useEffect now
       };
@@ -155,28 +155,28 @@ const Game = () => {
           console.log("📥 Received data:", data);
   
           if (data.error) {
-            console.error("❌ Server error:", data.error);
+            console.error("Server error:", data.error);
           } else if (data.detections) {
             setDetectedCards(data.detections);
           }
         } catch (error) {
-          console.error("❌ Error parsing WebSocket message:", error);
+          console.error("Error parsing WebSocket message:", error);
         }
       };
   
       socket.onerror = (error) => {
-        console.error("❌ WebSocket Error:", error);
+        console.error("WebSocket Error:", error);
         setIsWebSocketStarted(false);
         setWs(null);
       };
   
       socket.onclose = (event) => {
-        console.log("🔌 WebSocket closed", event.code, event.reason);
+        console.log("WebSocket closed", event.code, event.reason);
         setIsWebSocketStarted(false);
         setWs(null);
       };
     } catch (error) {
-      console.error("❌ Error creating WebSocket:", error);
+      console.error("Error creating WebSocket:", error);
       setIsWebSocketStarted(false);
       setWs(null);
     }
@@ -186,7 +186,7 @@ const Game = () => {
   // Capture and send frames to WebSocket
   useEffect(() => {
     if (!isWebSocketStarted || !ws || ws.readyState !== WebSocket.OPEN) {
-      console.log("⏳ Waiting for WebSocket connection...", {
+      console.log("Waiting for WebSocket connection...", {
         isWebSocketStarted,
         wsState: ws?.readyState,
       });
@@ -197,7 +197,7 @@ const Game = () => {
     const ctx = canvas?.getContext("2d");
   
     if (!canvas || !ctx) {
-      console.error("❌ Canvas or context not available");
+      console.error("Canvas or context not available");
       return;
     }
   
@@ -207,9 +207,9 @@ const Game = () => {
           if (blob && ws.readyState === WebSocket.OPEN) {
             const arrayBuffer = await blob.arrayBuffer();
             ws.send(arrayBuffer);
-            console.log("📤 Sent frame (binary)");
+            console.log("Sent frame (binary)");
           } else {
-            console.warn("⚠️ WebSocket not ready, skipping frame");
+            console.warn("WebSocket not ready, skipping frame");
           }
         },
         "image/jpeg",
@@ -221,10 +221,11 @@ const Game = () => {
     const interval = setInterval(captureFrame, 500);
   
     return () => {
-      console.log("🛑 Stopping frame capture");
+      console.log("Stopping frame capture");
       clearInterval(interval);
     };
   }, [ws, isWebSocketStarted]);
+  
   return (
     <div className="flex flex-col items-center justify-center h-screen bg-gray-900 text-white">
       <h1 className="text-3xl font-bold mb-4">Edge21</h1>
@@ -265,12 +266,12 @@ const Game = () => {
       />
 
       {/* Canvas for Displaying Video & Sending Frames */}
-      <canvas
-        ref={canvasRef}
-        width="640"
-        height="480"
-        className="border-4 border-blue-500 rounded-lg shadow-lg"
-      />
+      <div className='relative w-full' style={{ aspectRatio: '4 / 3' }}>
+        <canvas
+          ref={canvasRef}
+          className="border-4 border-blue-500 rounded-lg shadow-lg absolute top-0 left-0 w-full h-full"
+        />
+      </div>
 
       {/* Detected Cards List */}
       <div className="mt-6 p-4 bg-gray-800 rounded-lg w-full max-w-md">
