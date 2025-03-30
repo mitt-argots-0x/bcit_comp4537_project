@@ -39,5 +39,16 @@
             "gameLabel": "Game",
             "homeLabel": "Home"
         }
+    },
+    "forgotPassword": {
+        "title": "Reset Your Password",
+        "emailLabel": "Email Address",
+        "rememberPasswordLabel": "Remember your password?",
+        "resetButton": "Send Link",
+        "loginButton": "Login",
+        "status": {
+            "success": "Reset link sent!",
+            "fail": "Server error, please try again later."
+        }
     }
 }

@@ -4,7 +4,6 @@ import { useRouter } from "next/navigation";
 import { TbCards } from 'react-icons/tb';
 import { ToastContainer, toast } from 'react-toastify';
 import { useTranslations } from "@/hooks/useTranslations";
-import { useSearchParams } from 'next/navigation';
 
 export default function Login() {
   const router = useRouter();
@@ -12,22 +11,21 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const t = useTranslations('auth');
-  const searchParams = useSearchParams();
 
   // Show unauthorized page accesses
-  useEffect(() => {
-    const error = searchParams.get('error');
-    if (error === 'unauthorized' && !hasShownToast.current) {
-      console.log("ERROR");
-      toast.error("You must be logged in to access the page.");
-      hasShownToast.current = true;
+  // useEffect(() => {
+  //   const error = useSearchParams.get('error');
+  //   if (error === 'unauthorized' && !hasShownToast.current) {
+  //     console.log("ERROR");
+  //     toast.error("You must be logged in to access the page.");
+  //     hasShownToast.current = true;
 
-      setTimeout(() => {
-        router.replace('/login', undefined, { shallow: true });
-      }, 100);
-    }
+  //     setTimeout(() => {
+  //       router.replace('/login', undefined, { shallow: true });
+  //     }, 100);
+  //   }
 
-  }, [searchParams]);
+  // }, []);
 
   const handleSubmit = async(e) => {
     e.preventDefault();
