@@ -1,4 +1,6 @@
 import connectToDatabase from '../../../../lib/mongodb';
+import { cookies } from 'next/headers';
+
 export async function POST(req) {
     try {
         // connect to db
@@ -8,15 +10,21 @@ export async function POST(req) {
         // log api call
         const apiCallsLog = await db.collection('apiCalls').updateOne({ email: body.email }, { $inc: { admin: 1 } });
 
+        const cookieStore = await cookies();
+        const token = cookieStore.get('sessionToken')?.value;
+
         // check valid session
-        const validSession = await db.collection('sessions').findOne({ email: body.email, token: body.session });
-        if (!validSession) {
+        const validSession = await db.collection('sessions').findOne({ token });
+        // if (!validSession) {
+        //     return new Response(JSON.stringify({ error: "Invalid session" }), { status: 401 });
+        // }
+
+        if (!validSession || validSession.email !== 'admin@admin.com') {
             return new Response(JSON.stringify({ error: "Invalid session" }), { status: 401 });
-        }
+        }        
 
         // get all user info
         const info = await db.collection('apiCalls').find({}, { projection: { email: 1, admin: 1, dashboard: 1, forgot: 1, game: 1, login: 1, resetPassword: 1, sendResetLink: 1, signout: 1, signup: 1, _id: 0 } }).toArray();
-
         
         console.log(info);
 
