@@ -1,6 +1,41 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 
+// convert label to value
+const getCardValue = (label) => {
+  const rank = label.split(" ")[0];
+  if (["J", "Q", "K"].includes(rank)) return 10;
+  if (rank === "A") return 11;
+  return parseInt(rank);
+};
+
+// calculate total value
+const computeHandValue = (cards) => {
+  let total = 0;
+  let aceCount = 0;
+
+  cards.forEach((card) => {
+    const val = getCardValue(card.label);
+    if (card.label.startsWith("A")) aceCount++;
+    total += val;
+  });
+  // handle aces
+  while (total > 21 && aceCount > 0) {
+    total -= 10;
+    aceCount--;
+  }
+
+  return total;
+};
+
+// simple recommendation
+const getRecommendation = (cards) => {
+  const total = computeHandValue(cards);
+  if (total >= 17) return `Stand (${total})`;
+  if (total <= 11) return `Hit (${total})`;
+  return total >= 12 && total <= 16 ? `Hit (${total})` : `Stand (${total})`;
+};
+
 const Game = () => {
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
@@ -134,26 +169,26 @@ const Game = () => {
       setDetectedCards([]);
       return;
     }
-  
+
     try {
-      console.log("🔄 Starting WebSocket connection...");
+      console.log("Starting WebSocket connection...");
       const protocol = window.location.protocol === "https:" ? "wss://" : "ws://";
       const backendURL = `${protocol}${BACKEND_IP}/video-detect`;
       console.log(`🔗 Connecting to: ${backendURL}`);
-  
+
       const socket = new WebSocket(backendURL);
-  
+
       socket.onopen = () => {
         console.log("WebSocket connection established");
         setWs(socket); // Only set after connected
         setIsWebSocketStarted(true); // Triggers useEffect now
       };
-  
+
       socket.onmessage = (event) => {
         try {
           const data = JSON.parse(event.data);
-          console.log("📥 Received data:", data);
-  
+          console.log("Received data:", data);
+
           if (data.error) {
             console.error("Server error:", data.error);
           } else if (data.detections) {
@@ -163,13 +198,13 @@ const Game = () => {
           console.error("Error parsing WebSocket message:", error);
         }
       };
-  
+
       socket.onerror = (error) => {
         console.error("WebSocket Error:", error);
         setIsWebSocketStarted(false);
         setWs(null);
       };
-  
+
       socket.onclose = (event) => {
         console.log("WebSocket closed", event.code, event.reason);
         setIsWebSocketStarted(false);
@@ -181,7 +216,6 @@ const Game = () => {
       setWs(null);
     }
   };
-  
 
   // Capture and send frames to WebSocket
   useEffect(() => {
@@ -192,15 +226,15 @@ const Game = () => {
       });
       return;
     }
-  
+
     const canvas = canvasRef.current;
     const ctx = canvas?.getContext("2d");
-  
+
     if (!canvas || !ctx) {
       console.error("Canvas or context not available");
       return;
     }
-  
+
     const captureFrame = () => {
       canvas.toBlob(
         async (blob) => {
@@ -216,16 +250,16 @@ const Game = () => {
         0.8
       );
     };
-  
-    console.log("🎥 Starting frame capture");
+
+    console.log("starting frame capture");
     const interval = setInterval(captureFrame, 500);
-  
+
     return () => {
       console.log("Stopping frame capture");
       clearInterval(interval);
     };
   }, [ws, isWebSocketStarted]);
-  
+
   return (
     <div className="flex flex-col items-center justify-center h-screen bg-gray-900 text-white">
       <h1 className="text-3xl font-bold mb-4">Edge21</h1>
@@ -245,11 +279,10 @@ const Game = () => {
 
       {/* Start/Stop WebSocket Button */}
       <button
-        className={`px-6 py-2 text-white rounded-lg mb-4 disabled:opacity-50 disabled:cursor-not-allowed ${
-          isWebSocketStarted
+        className={`px-6 py-2 text-white rounded-lg mb-4 disabled:opacity-50 disabled:cursor-not-allowed ${isWebSocketStarted
             ? "bg-red-500 hover:bg-red-600"
             : "bg-blue-500 hover:bg-blue-600"
-        }`}
+          }`}
         onClick={toggleWebSocket}
       >
         {isWebSocketStarted ? "Stop Detection" : "Start Detection"}
@@ -271,6 +304,16 @@ const Game = () => {
           ref={canvasRef}
           className="border-4 border-blue-500 rounded-lg shadow-lg absolute top-0 left-0 w-full h-full"
         />
+      </div>
+
+      {/* Recommendation */}
+      <div className="mt-4 p-4 bg-gray-700 rounded">
+        <h2 className="text-xl mb-2">Recommendation:</h2>
+        {detectedCards.length > 0 ? (
+          <p className="text-green-400 font-bold text-2xl">{getRecommendation(detectedCards)}</p>
+        ) : (
+          <p className="text-yellow-400">Waiting for cards...</p>
+        )}
       </div>
 
       {/* Detected Cards List */}
