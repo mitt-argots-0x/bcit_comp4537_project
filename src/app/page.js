@@ -1,22 +1,33 @@
 'use client';
-import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import Layout from './components/Layout';
 
 export default function Home() {
-  const router = useRouter();
 
-  useEffect(() => {
-    // Checks if the user is currently logged into a session.
-    const checkAuth = async () => {
-      const res = await fetch('/api/authenticate');
-      if (!res.ok) {
-        router.push('/login');
-      }
-    }
+  const [numCalls, setNumCalls] = useState(null);
+    useEffect(() => {
+        const email = sessionStorage.getItem("email")
+        const session = sessionStorage.getItem("sessionToken")
+    
+        const getCalls = async () =>{
+            try{
+                const response = await fetch("/api/dashboard", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({email, session}),
+                })
 
-    checkAuth();
-  }, [router]);
+                if (!response.ok) throw new Error("Failed to fetch data");
+
+                const data = await response.json();
+                setNumCalls(data.numcalls);
+
+            } catch(error){
+                console.log(error);
+            }
+        }
+        getCalls();
+  }, []);
 
   return (
     <Layout>
