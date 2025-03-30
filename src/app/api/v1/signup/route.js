@@ -1,6 +1,7 @@
 import connectToDatabase from '../../../../lib/mongodb';
 import { hash } from '../../../../lib/hash';
 import crypto from 'crypto'
+import { cookies } from 'next/headers';
 
 export async function POST(req) {
     try {
