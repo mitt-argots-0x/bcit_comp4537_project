@@ -62,7 +62,7 @@ export default function ForgotPassword() {
         {t('rememberPasswordLabel')}{' '}
         <a href="/login" className="text-indigo-600 hover:underline">{t('loginButton')}</a>
       </p>
-      <p className='p-10 text-green-500'>
+      <p className='py-10'>
         { status ? t('status.success') : t('status.fail')}
       </p>
     </div>

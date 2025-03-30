@@ -5,7 +5,11 @@ import { ObjectId } from 'mongodb';
 export async function PATCH(req) {
   try {
     const body = await req.json();
-    const { token, password } = body;
+    const { token, password, confirmPassword } = body;
+
+    if (password !== confirmPassword) {
+      return Response.json({ success: false, message: "Passwords do not match" }, { status: 400 })
+    }
 
     const { db } = await connectToDatabase();
 

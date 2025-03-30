@@ -50,5 +50,17 @@
             "success": "Reset link sent!",
             "fail": "Server error, please try again later."
         }
+    },
+    "resetPassword": {
+        "title": "Enter Your New Password",
+        "passwordLabel": "New Password",
+        "passwordConfirmLabel": "Confirm New Password",
+        "resetButton": "Reset Password",
+        "rememberPasswordLabel": "Remember your password?",
+        "loginButton": "Login", 
+        "status": {
+            "success": "Password Reset!",
+            "fail": "Error, please try again"
+        }
     }
 }
