@@ -1,6 +1,6 @@
-import connectToDatabase from '../../../lib/mongodb';
+import connectToDatabase from '../../../../lib/mongodb';
 import { cookies } from 'next/headers';
-import { hash, compare } from '../../../lib/hash';
+import { hash, compare } from '../../../../lib/hash';
 import emailjs from '@emailjs/nodejs';
 import crypto from 'crypto'
 

@@ -1,5 +1,5 @@
 // app/api/posts/route.js
-import { connectToDatabase } from '../../../lib/mongodb';
+import { connectToDatabase } from '../../../../lib/mongodb';
 
 export const dynamic = 'force-static';
 

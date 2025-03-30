@@ -1,5 +1,5 @@
-import connectToDatabase from '../../../lib/mongodb';
-import { hash } from '../../../lib/hash'; // your hashing logic
+import connectToDatabase from '../../../../lib/mongodb';
+import { hash } from '../../../../lib/hash'; // your hashing logic
 import { ObjectId } from 'mongodb';
 
 export async function PATCH(req) {

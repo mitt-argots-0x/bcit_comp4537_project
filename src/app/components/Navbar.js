@@ -30,7 +30,7 @@ export default function NavBar() {
     e.preventDefault();
     console.log("in signout")
     try {
-      const response = await fetch("/api/signout", {
+      const response = await fetch("/api/v1/signout", {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: sessionStorage.getItem('email') }),

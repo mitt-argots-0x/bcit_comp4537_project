@@ -14,7 +14,7 @@ export default function Login() {
     e.preventDefault();
     console.log("in handleSubmit")
     try {
-      const response = await fetch("/api/login", {
+      const response = await fetch("/api/v1/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({email, password}),

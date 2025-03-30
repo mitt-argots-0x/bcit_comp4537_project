@@ -1,5 +1,5 @@
-import connectToDatabase from '../../../lib/mongodb';
-import { hash } from '../../../lib/hash';
+import connectToDatabase from '../../../../lib/mongodb';
+import { hash } from '../../../../lib/hash';
 import crypto from 'crypto'
 
 export async function POST(req) {
@@ -10,6 +10,7 @@ export async function POST(req) {
         // Validation errors object
         const errors = {};
 
+        // regex partially protects against nosql injections
         if (!body.email || !/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/.test(body.email)) {
             errors.email = "Valid email is required";
         }

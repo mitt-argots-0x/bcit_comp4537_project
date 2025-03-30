@@ -1,4 +1,4 @@
-import connectToDatabase from '../../../lib/mongodb';
+import connectToDatabase from '../../../../lib/mongodb';
 import { cookies } from 'next/headers';
 
 export async function DELETE(req){

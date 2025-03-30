@@ -9,7 +9,7 @@ export default function Admin() {
         const session = sessionStorage.getItem("sessionToken")
         const getInfo = async()=>{
             try{
-                const response = await fetch("/api/admin", {
+                const response = await fetch("/api/v1/admin", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({email, session})

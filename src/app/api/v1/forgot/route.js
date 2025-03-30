@@ -1,4 +1,4 @@
-import connectToDatabase from '../../../lib/mongodb';
+import connectToDatabase from '../../../../lib/mongodb';
 import emailjs from 'emailjs-com';
 require("dotenv").config();
 

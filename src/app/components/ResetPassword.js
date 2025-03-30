@@ -11,7 +11,7 @@ export default function ResetPasswordPage() {
   const [message, setMessage] = useState('');
 
   const handleReset = async () => {
-    const res = await fetch('/api/reset-password', {
+    const res = await fetch('/api/v1/reset-password', {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ token, password }),
