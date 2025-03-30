@@ -9,15 +9,11 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState(true); // new state to block render
 
   useEffect(() => {
-      const email = sessionStorage.getItem("email")
-      const session = sessionStorage.getItem("sessionToken")
-  
       const getCalls = async () =>{
           try{
             const response = await fetch("/api/v1/dashboard", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({email, session}),
             })
 
             if (!response.ok) {

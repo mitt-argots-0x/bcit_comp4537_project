@@ -8,18 +8,15 @@ export async function POST(req) {
         const body = await req.json();
 
         // log api call
-        const apiCallsLog = await db.collection('apiCalls').updateOne({ email: body.email }, { $inc: { admin: 1 } });
-
+        
         const cookieStore = await cookies();
         const token = cookieStore.get('sessionToken')?.value;
-
+        
         // check valid session
         const validSession = await db.collection('sessions').findOne({ token });
-        // if (!validSession) {
-        //     return new Response(JSON.stringify({ error: "Invalid session" }), { status: 401 });
-        // }
-
+        
         if (!validSession || validSession.email !== 'admin@admin.com') {
+            const apiCallsLog = await db.collection('apiCalls').updateOne({ email: validSession.email }, { $inc: { admin: 1 } });
             return new Response(JSON.stringify({ error: "Invalid session" }), { status: 401 });
         }        
 

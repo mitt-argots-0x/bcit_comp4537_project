@@ -9,18 +9,15 @@ export default function Dashboard() {
     const t = useTranslations('dashboard');
     const [numCalls, setNumCalls] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [userEmail, setUserEmail] = useState('');
     const router = useRouter();
     
     useEffect(() => {
         const getCalls = async () =>{
-            const email = sessionStorage.getItem("email");
-            const session = sessionStorage.getItem("sessionToken");
-
             try{
                 const response = await fetch("/api/v1/dashboard", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({email, session}),
                 })
     
                 if (!response.ok) {
@@ -30,6 +27,7 @@ export default function Dashboard() {
 
                 const data = await response.json();
                 setNumCalls(data.numcalls);
+                setUserEmail(data.email);
                 if (data.numcalls > 20) {
                     toast.warn("API Calls have exceeded limit!");
                 }
@@ -49,7 +47,7 @@ export default function Dashboard() {
     return(
         <>
         <ToastContainer />
-        <h1>{t('header.title', { name: sessionStorage.getItem('email') || 'User'})}</h1>
+        <h1>{t('header.title', { name: userEmail || 'User'})}</h1>
         <p>{t('header.subtitle')}</p>
         <p>{t('stats.usage', { tokens: numCalls })}</p>
         </>

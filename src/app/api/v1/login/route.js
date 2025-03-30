@@ -57,18 +57,16 @@ export async function POST(req) {
         const newSession = await db.collection('sessions').insertOne({ email: body.email, token: hashedSession, expiry: new Date(Date.now() + 60 * 60 * 1000) })
 
         // Set a cookie is the user is an Admin
-        if (body.email === 'admin@admin.com') {
-            const cookieStore = await cookies();
-            cookieStore.set({
-                name: 'sessionToken',
-                value: hashedSession,
-                httpOnly: true,
-                path: '/',
-                sameSite: 'strict',
-                secure: true,
-                maxAge: 60 * 60 // 1 Hour
-            });
-        }
+        const cookieStore = await cookies();
+        cookieStore.set({
+            name: 'sessionToken',
+            value: hashedSession,
+            httpOnly: true,
+            path: '/',
+            sameSite: 'strict',
+            secure: true,
+            maxAge: 60 * 60 // 1 Hour
+        });
 
         return new Response(JSON.stringify({
             message: "Login success",

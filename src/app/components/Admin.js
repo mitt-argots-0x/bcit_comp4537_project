@@ -19,15 +19,11 @@ export default function Admin() {
     const router = useRouter();
 
     useEffect(() => {
-        const email = sessionStorage.getItem("email");
-        const session = sessionStorage.getItem("sessionToken");
-
         const getInfo = async () => {
             try {
                 const response = await fetch("/api/v1/admin", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ email, session })
                 });
 
                 if (!response.ok) {
