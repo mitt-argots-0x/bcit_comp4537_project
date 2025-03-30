@@ -20,7 +20,6 @@ export default function Home() {
                 body: JSON.stringify({email, session}),
             })
 
-            // TODO Reroute
             if (!response.ok) {
               router.push('/login');
               return;

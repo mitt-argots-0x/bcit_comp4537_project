@@ -2,7 +2,7 @@ import connectToDatabase from '../../../lib/mongodb';
 import { hash } from '../../../lib/hash'; // your hashing logic
 import { ObjectId } from 'mongodb';
 
-export async function POST(req) {
+export async function PATCH(req) {
   try {
     const body = await req.json();
     const { token, password } = body;
@@ -19,9 +19,9 @@ export async function POST(req) {
       return Response.json({ success: false, message: 'Token expired' }, { status: 400 });
     }
 
-    const hashedPassword = await hash(password);
+    const hashedPassword = hash(password);
 
-    // 4. Update password and clear token
+    // Update password and clear token
     await db.collection('users').updateOne(
       { _id: new ObjectId(user._id) },
       {

@@ -43,7 +43,7 @@ const Game = () => {
   // Start Camera Function (Only runs if permission is granted)
   async function startCamera() {
     try {
-      console.log("🔍 Detecting cameras...");
+      console.log("Detecting cameras...");
       const devices = await navigator.mediaDevices.enumerateDevices();
       const videoDevices = devices.filter(
         (device) => device.kind === "videoinput"
@@ -145,8 +145,8 @@ const Game = () => {
   
       socket.onopen = () => {
         console.log("WebSocket connection established");
-        setWs(socket); // 👈 Only set after connected
-        setIsWebSocketStarted(true); // 👈 Triggers useEffect now
+        setWs(socket); // Only set after connected
+        setIsWebSocketStarted(true); // Triggers useEffect now
       };
   
       socket.onmessage = (event) => {

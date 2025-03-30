@@ -12,7 +12,7 @@ export default function ResetPasswordPage() {
 
   const handleReset = async () => {
     const res = await fetch('/api/reset-password', {
-      method: 'POST',
+      method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ token, password }),
     });
