@@ -1,18 +1,38 @@
 'use client'
-
-import { useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { TbCards } from 'react-icons/tb';
 import { ToastContainer, toast } from 'react-toastify';
+import { useTranslations } from "@/hooks/useTranslations";
+import { useSearchParams } from 'next/navigation';
 
 export default function Login() {
   const router = useRouter();
+  const hasShownToast = useRef(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const t = useTranslations('auth');
+  const searchParams = useSearchParams();
+
+  // Show unauthorized page accesses
+  useEffect(() => {
+    const error = searchParams.get('error');
+    if (error === 'unauthorized' && !hasShownToast.current) {
+      console.log("ERROR");
+      toast.error("You must be logged in to access the page.");
+      hasShownToast.current = true;
+
+      setTimeout(() => {
+        router.replace('/login', undefined, { shallow: true });
+      }, 100);
+    }
+
+  }, [searchParams]);
 
   const handleSubmit = async(e) => {
     e.preventDefault();
     console.log("in handleSubmit")
+
     try {
       const response = await fetch("/api/v1/login", {
         method: "POST",
@@ -32,8 +52,6 @@ export default function Login() {
       sessionStorage.setItem("sessionToken", data.sessionToken);
       console.log(sessionStorage.getItem("sessionToken", data.sessionToken));
 
-      console.log(data)
-
       if (data.email === "admin@admin.com") {
         router.push('/admin');
       } else {
@@ -46,16 +64,15 @@ export default function Login() {
 
   return (
     <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
-      <div className='flex absolute bottom-0 right-0'>
-        <ToastContainer position="bottom-right"/>
-      </div>
+
+      <ToastContainer position="bottom-right"/>
 
       <div className="sm:mx-auto sm:w-full sm:max-w-sm">
         <div className='w-full h-full flex justify-center items-center'>
           <TbCards className='text-5xl'/>
         </div>
         <h2 className="mt-10 text-center text-2xl/9 font-bold tracking-tight text-gray-900">
-          Sign in to your account
+          {t('login.title')}
         </h2>
       </div>
 
@@ -63,7 +80,7 @@ export default function Login() {
         <form action="#" method="POST" className="space-y-6" onSubmit={handleSubmit}>
           <div>
             <label htmlFor="email" className="block text-sm/6 font-medium text-gray-900">
-              Email address
+              {t('login.emailLabel')}
             </label>
             <div className="mt-2">
               <input
@@ -81,11 +98,11 @@ export default function Login() {
           <div>
             <div className="flex items-center justify-between">
               <label htmlFor="password" className="block text-sm/6 font-medium text-gray-900">
-                Password
+                {t('login.passwordLabel')}
               </label>
               <div className="text-sm">
                 <a href="/forgot-password" className="font-semibold text-indigo-600 hover:text-indigo-500">
-                  Forgot password?
+                  {t('login.forgotLabel')}
                 </a>
               </div>
             </div>
@@ -107,15 +124,15 @@ export default function Login() {
               type="submit"
               className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
             >
-              Sign in
+              {t('login.button')}
             </button>
           </div>
         </form>
 
         <p className="mt-10 text-center text-sm/6 text-gray-500">
-          Not a member?{' '}
+          {t('login.signupLabel')}{' '}
           <a href="/signup" className="font-semibold text-indigo-600 hover:text-indigo-500">
-            Sign Up
+            {t('login.signupButton')}
           </a>
         </p>
       </div>

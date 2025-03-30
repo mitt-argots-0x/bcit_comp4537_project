@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 
 // convert label to value
 const getCardValue = (label) => {
@@ -45,8 +46,35 @@ const Game = () => {
   const [cameraPermission, setCameraPermission] = useState(null);
   const [cameraError, setCameraError] = useState(null);
   const BACKEND_IP = "jellyfish-app-r8gfu.ondigitalocean.app";
+  const router = useRouter();
+
   // Check Camera Permission
   useEffect(() => {
+
+    const authenticate = async () => {
+      const email = sessionStorage.getItem('email');
+      const session = sessionStorage.getItem('session');
+      // Checks for user logged in
+      try{
+        const response = await fetch("/api/v1/dashboard", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({email, session}),
+        })
+  
+        if (!response.ok) {
+            router.push('/login?error=unauthorized');
+            return;
+        };
+
+        console.log(response.json());
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    authenticate();
+
     async function checkPermission() {
       try {
         const permissionStatus = await navigator.permissions.query({

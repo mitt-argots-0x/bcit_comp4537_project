@@ -9,10 +9,12 @@ export async function POST(req) {
 
         // check session
         const validSession = await db.collection('sessions').findOne({ email: body.email, token: body.session });
+
         if (validSession) {
+            console.log('valid session')
             const user = await db.collection('apiCalls').findOne({ email: body.email })
             const numcalls = user?.game ?? 0;
-            return new Response(JSON.stringify({ numcalls }))
+            return new Response(JSON.stringify({ numcalls }), { status: 200 })
         }
 
     } catch (error) {
@@ -21,7 +23,6 @@ export async function POST(req) {
             error: "Something went wrong"
         }), { status: 500, headers: { "Content-Type": "application/json" } });
     }
-
     return new Response(JSON.stringify({
         message: "Something Redirected"
     }), { status: 308, headers: { "Content-Type": "application/json" } });

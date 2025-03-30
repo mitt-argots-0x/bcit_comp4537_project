@@ -5,20 +5,21 @@ import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
 import { TbCards } from 'react-icons/tb'
 import { useRouter } from 'next/navigation';
 import { ToastContainer, toast } from 'react-toastify'
-
-const navigation = [
-  { name: 'Dashboard', href: '/dashboard', current: false },
-  { name: 'Home', href: '/', current: false },
-  { name: 'Poker', href: '/game', current: false },
-]
+import { useTranslations } from '@/hooks/useTranslations';
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
 export default function NavBar() {
+  const t = useTranslations('navbar');
   const router = useRouter();
   const [showSignOut, setShowSignOut] = useState(false);
+  const navigation = [
+    { name: t('page.dashboardLabel'), href: '/dashboard', current: false },
+    { name: t('page.homeLabel'), href: '/', current: false },
+    { name: t('page.gameLabel'), href: '/game', current: false },
+  ]
 
   useEffect(() => {
     if(sessionStorage.getItem('sessionToken')){
@@ -28,7 +29,6 @@ export default function NavBar() {
 
   const signOut = async (e) => {
     e.preventDefault();
-    console.log("in signout")
     try {
       const response = await fetch("/api/v1/signout", {
         method: "DELETE",
@@ -60,7 +60,7 @@ export default function NavBar() {
             {/* Mobile menu button*/}
             <DisclosureButton className="group relative inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:ring-2 focus:ring-white focus:outline-hidden focus:ring-inset">
               <span className="absolute -inset-0.5" />
-              <span className="sr-only">Open main menu</span>
+              <span className="sr-only">{t('title')}</span>
               <Bars3Icon aria-hidden="true" className="block size-6 group-data-open:hidden" />
               <XMarkIcon aria-hidden="true" className="hidden size-6 group-data-open:block" />
             </DisclosureButton>
@@ -95,8 +95,8 @@ export default function NavBar() {
                 onClick={signOut}
               >
                 <span className="absolute -inset-1.5" />
-                <span className="sr-only">Sign Out</span>
-                Sign Out
+                <span className="sr-only">{t('signoutLabel')}</span>
+                {t('signoutLabel')}
               </button>
             )}
 

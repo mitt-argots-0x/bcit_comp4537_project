@@ -2,11 +2,13 @@
 import { useEffect, useState } from "react"
 import { FaChess } from "react-icons/fa"
 import { useRouter } from "next/navigation";
+import { useTranslations } from "@/hooks/useTranslations";
 
 export default function Signup() {
   const router = useRouter();
   const [formData, setFormData] = useState({ email: '', password: '', confirmPassword: '' });
   const [message, setMessage] = useState('');
+  const t = useTranslations('auth');
 
   // Load saved form data from localStorage when the component mounts
   useEffect(() => {
@@ -61,19 +63,11 @@ export default function Signup() {
 
   return (
     <>
-      {/*
-          This example requires updating your template:
-  
-          ```
-          <html class="h-full bg-white">
-          <body class="h-full">
-          ```
-        */}
       <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
           <FaChess className='text-white text-xl lg:text-3xl' />
           <h2 className="mt-10 text-center text-2xl/9 font-bold tracking-tight text-gray-900">
-            Sign Up
+            {t('signup.title')}
           </h2>
         </div>
 
@@ -81,7 +75,7 @@ export default function Signup() {
           <form action="#" method="POST" className="space-y-6" onSubmit={handleSubmit}>
             <div>
               <label htmlFor="email" className="block text-sm/6 font-medium text-gray-900">
-                Email address
+                {t('signup.emailLabel')}
               </label>
               <div className="mt-2">
                 <input
@@ -100,7 +94,7 @@ export default function Signup() {
             <div>
               <div className="flex items-center justify-between">
                 <label htmlFor="password" className="block text-sm/6 font-medium text-gray-900">
-                  Password
+                  {t('signup.passwordLabel')}
                 </label>
               </div>
               <div className="mt-2">
@@ -120,7 +114,7 @@ export default function Signup() {
             <div>
               <div className="flex items-center justify-between">
                 <label htmlFor="password" className="block text-sm/6 font-medium text-gray-900">
-                  Confirm Password
+                  {t('signup.passwordConfirmLabel')}
                 </label>
               </div>
               <div className="mt-2">
@@ -141,7 +135,7 @@ export default function Signup() {
                 type="submit"
                 className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
               >
-                Sign Up
+                {t('signup.button')}
               </button>
             </div>
           </form>

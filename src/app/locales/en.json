@@ -1,0 +1,43 @@
+{
+    "dashboard": {
+        "header": {
+            "title": "Welcome Back, {{name}}",
+            "subtitle": "Welcome to your dashboard!"
+        },
+        "stats": {
+            "usage": "You have used {{tokens}} out of your limit of 20"
+        }
+    },
+    "auth": {
+        "login": {
+            "title": "Sign in to your account",
+            "emailLabel": "Email",
+            "passwordLabel": "Password",
+            "forgotLabel": "Forgot password?",
+            "signupLabel": "Not a member?",
+            "signupButton": "Sign up!",
+            "button": "Log In"
+        },
+        "signup": {
+            "title": "Sign up for an account!",
+            "emailLabel": "Email",
+            "passwordLabel": "Password",
+            "passwordConfirmLabel": "Confirm Password",
+            "button": "Sign up"
+        },
+        "error": {
+            "invalidCredentials": "Invalid email or password"
+        }
+    },
+    "navbar": {
+        "title": "Open main menu",
+        "homeLabel": "Home",
+        "gameLabel": "Game",
+        "signoutLabel": "Sign out",
+        "page": {
+            "dashboardLabel": "Dashboard",
+            "gameLabel": "Game",
+            "homeLabel": "Home"
+        }
+    }
+}

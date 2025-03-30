@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 export default function Admin() {
     const [userInfo, setUserInfo] = useState(null);
@@ -15,6 +16,7 @@ export default function Admin() {
         signoutReq: 0,
         signupReq: 0,
     });
+    const router = useRouter();
 
     useEffect(() => {
         const email = sessionStorage.getItem("email");
@@ -28,7 +30,10 @@ export default function Admin() {
                     body: JSON.stringify({ email, session })
                 });
 
-                if (!response.ok) throw new Error("Failed to fetch data");
+                if (!response.ok) {
+                    router.push('/login?error=unauthorized');
+                    return;
+                };
 
                 const data = await response.json();
                 console.log(data);
