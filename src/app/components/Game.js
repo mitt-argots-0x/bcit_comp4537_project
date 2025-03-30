@@ -1,6 +1,5 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
 
 // convert label to value
 const getCardValue = (label) => {
@@ -46,7 +45,6 @@ const Game = () => {
   const [cameraPermission, setCameraPermission] = useState(null);
   const [cameraError, setCameraError] = useState(null);
   const BACKEND_IP = "orca-app-a9bi7.ondigitalocean.app";
-  const router = useRouter();
 
   // Check Camera Permission
   useEffect(() => {
@@ -56,18 +54,12 @@ const Game = () => {
       const session = sessionStorage.getItem('session');
       // Checks for user logged in
       try{
-        const response = await fetch("/api/v1/dashboard", {
+        await fetch("/api/v1/dashboard", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({email, session}),
         })
-  
-        if (!response.ok) {
-            router.push('/login?error=unauthorized');
-            return;
-        };
 
-        console.log(response.json());
       } catch (error) {
         console.log(error);
       }
