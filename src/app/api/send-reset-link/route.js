@@ -18,7 +18,8 @@ export async function POST(req) {
     }
 
     const resetToken = crypto.randomUUID();
-    const resetLink = `http://localhost:3000/reset-password?token=${resetToken}`;
+    // const resetLink = `http://localhost:3000/reset-password?token=${resetToken}`;
+    const resetLink = `https://edge21-crt9y.ondigitalocean.app/reset-password?token=${resetToken}`;
 
     // after 15 minutes, this token will be expired
     const tokenExpiry = new Date(Date.now() + 1000 * 60 * 15);
