@@ -4,7 +4,7 @@ import crypto from 'crypto'
 
 export async function POST(req) {
     try {
-        const {db} = await connectToDatabase();
+        const { db } = await connectToDatabase();
         const body = await req.json();
 
         // Validation errors object
@@ -30,10 +30,10 @@ export async function POST(req) {
                 { status: 400, headers: { "Content-Type": "application/json" } }
             );
         }
-        
+
         //checks for existing user with same email
         const existingUser = await db.collection('users').findOne({ email: body.email });
-        
+
         if (existingUser) {
             console.log("User already exists");
             return Response.json({
@@ -44,14 +44,25 @@ export async function POST(req) {
                 { status: 400, headers: { "Content-Type": "application/json" } }
             );
         }
-        
+
         //hash password with bcrypt
         const hashedPassword = hash(body.password);
         const newUser = await db.collection('users').insertOne({ email: body.email, password: hashedPassword, numcalls: 0 });
-        
+
         //hash session token
         const hashedSession = hash(crypto.randomBytes(32).toString("hex"));
-        const newSession = await db.collection('sessions').insertOne({email: body.email, token: hashedSession, expiry: new Date(Date.now() + 60 * 60 * 1000)})
+        const newSession = await db.collection('sessions').insertOne({ email: body.email, token: hashedSession, expiry: new Date(Date.now() + 60 * 60 * 1000) })
+
+        const cookieStore = await cookies();
+        cookieStore.set({
+            name: 'sessionToken',
+            value: hashedSession,
+            httpOnly: true,
+            path: '/',
+            sameSite: 'strict',
+            secure: true,
+            maxAge: 60 * 60 // 1 Hour
+        });
 
         return new Response(JSON.stringify({
             message: "Signup success",

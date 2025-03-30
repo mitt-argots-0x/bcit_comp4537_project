@@ -11,9 +11,6 @@ export async function POST(req){
         // Validation errors object
         const errors = {};
 
-        if (!body.email || !/^[\w.-]+@([\w-]+\.)+[a-zA-Z]{2,}$/.test(body.email)) {
-            errors.email = "Valid email is required";
-        }
         if (!body.password || body.password.length < 3) {
             errors.password = "Password must be at least 3 characters";
         }

@@ -1,12 +1,14 @@
-// components/Navbar.js
-import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
-import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline'
-import { FaChess } from "react-icons/fa";
+'use client'
+import { useEffect, useState } from 'react'
+import { Disclosure, DisclosureButton, DisclosurePanel} from '@headlessui/react'
+import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
 import { TbCards } from 'react-icons/tb'
+import { useRouter } from 'next/navigation';
 
 const navigation = [
-  { name: 'Dashboard', href:'/dashboard', current: false },
-  { name: 'Home', href:'/', current: false },
+  { name: 'Dashboard', href: '/dashboard', current: false },
+  { name: 'Home', href: '/', current: false },
+  { name: 'Poker', href: '/game', current: false },
 ]
 
 function classNames(...classes) {
@@ -14,6 +16,40 @@ function classNames(...classes) {
 }
 
 export default function NavBar() {
+  const router = useRouter();
+  const [showSignOut, setShowSignOut] = useState(false);
+
+  useEffect(() => {
+    if(sessionStorage.getItem('sessionToken')){
+      setShowSignOut(true);
+    }
+  },[]);
+
+  const signOut = async (e) => {
+    e.preventDefault();
+    console.log("in signout")
+    try {
+      const response = await fetch("/api/signout", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: sessionStorage.getItem('email') }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        toast.error(data.message);
+        return;
+      }
+
+      sessionStorage.removeItem("email", data.email);
+      sessionStorage.removeItem("sessionToken", data.sessionToken);
+      setShowSignOut(false);
+      router.push('/')
+    } catch (error) {
+      console.log(error);
+    }
+  }
   return (
     <Disclosure as="nav" className="bg-gray-800">
       <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
@@ -29,7 +65,7 @@ export default function NavBar() {
           </div>
           <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
             <a className="flex items-center" href='/'>
-              <TbCards className='text-white text-xl lg:text-3xl'/>
+              <TbCards className='text-white text-xl lg:text-3xl' />
             </a>
             <div className="hidden sm:ml-6 sm:block">
               <div className="flex space-x-4">
@@ -50,58 +86,18 @@ export default function NavBar() {
             </div>
           </div>
           <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-            <button
-              type="button"
-              className="relative rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800 focus:outline-hidden"
-            >
-              <span className="absolute -inset-1.5" />
-              <span className="sr-only">View notifications</span>
-              <BellIcon aria-hidden="true" className="size-6" />
-            </button>
-
-            {/* Profile dropdown */}
-            <Menu as="div" className="relative ml-3">
-              <div>
-                <MenuButton className="relative flex rounded-full bg-gray-800 text-sm focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800 focus:outline-hidden">
-                  <span className="absolute -inset-1.5" />
-                  <span className="sr-only">Open user menu</span>
-                  <img
-                    alt=""
-                    src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                    className="size-8 rounded-full"
-                  />
-                </MenuButton>
-              </div>
-              <MenuItems
-                transition
-                className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 ring-1 shadow-lg ring-black/5 transition focus:outline-hidden data-closed:scale-95 data-closed:transform data-closed:opacity-0 data-enter:duration-100 data-enter:ease-out data-leave:duration-75 data-leave:ease-in"
+            {showSignOut && (
+              <button
+                type="button"
+                className="relative rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800 focus:outline-hidden"
+                onClick={signOut}
               >
-                <MenuItem>
-                  <a
-                    href="#"
-                    className="block px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-100 data-focus:outline-hidden"
-                  >
-                    Your Profile
-                  </a>
-                </MenuItem>
-                <MenuItem>
-                  <a
-                    href="#"
-                    className="block px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-100 data-focus:outline-hidden"
-                  >
-                    Settings
-                  </a>
-                </MenuItem>
-                <MenuItem>
-                  <a
-                    href="#"
-                    className="block px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-100 data-focus:outline-hidden"
-                  >
-                    Sign out
-                  </a>
-                </MenuItem>
-              </MenuItems>
-            </Menu>
+                <span className="absolute -inset-1.5" />
+                <span className="sr-only">Sign Out</span>
+                Sign Out
+              </button>
+            )}
+
           </div>
         </div>
       </div>
@@ -127,4 +123,3 @@ export default function NavBar() {
     </Disclosure>
   )
 }
-  
