@@ -1,5 +1,5 @@
 'use client'
-
+// used AI here to help with writing and debugging the loops (Steven)
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
