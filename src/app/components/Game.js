@@ -159,7 +159,7 @@ const Game = () => {
   };
 
   // Start/Stop WebSocket Connection
-  const toggleWebSocket = () => {
+  const  toggleWebSocket = async () => {
     if (isWebSocketStarted) {
       console.log("Stopping WebSocket connection...");
       if (ws) {
@@ -174,9 +174,15 @@ const Game = () => {
       console.log("Starting WebSocket connection...");
       const protocol = window.location.protocol === "https:" ? "wss://" : "ws://";
       const backendURL = `${protocol}${BACKEND_IP}/video-detect`;
-      console.log(`🔗 Connecting to: ${backendURL}`);
+      console.log(`Connecting to: ${backendURL}`);
 
       const socket = new WebSocket(backendURL);
+
+      const email = sessionStorage.getItem("email");
+      const res = await fetch(`/api/v1/game?email=${email}`, {
+          method: 'GET',
+          headers: { 'Content-Type': 'application/json' },
+      });
 
       socket.onopen = () => {
         console.log("WebSocket connection established");

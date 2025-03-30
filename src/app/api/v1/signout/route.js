@@ -5,6 +5,9 @@ export async function DELETE(req){
     try{
         const {db} = await connectToDatabase();
         const body = await req.json();
+
+        // log api call
+        const apiCallsLog = await db.collection('apiCalls').updateOne({email: body.email}, {$inc: {signout: 1}});
         
         const cookieStore = await cookies();
         const sessionToken = cookieStore.get('sessionToken')?.value;

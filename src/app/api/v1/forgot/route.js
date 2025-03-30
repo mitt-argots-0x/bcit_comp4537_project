@@ -7,6 +7,10 @@ export default async function POST(req) {
         const { db } = await connectToDatabase();
         const body = await req.json();
 
+        // log api call
+        const apiCallsLog = await db.collection('apiCalls').updateOne({ email: body.email }, { $inc: { forgot: 1 } });
+
+        // wait for emailjs
         const response = await emailjs.send(
             process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID,
             process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID,
@@ -18,7 +22,7 @@ export default async function POST(req) {
             process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY
         );
 
-
+        // check user
         const existingUser = await db.collection('users').findOne({ email: body.email });
         if (existingUser) {
 

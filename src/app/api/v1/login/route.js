@@ -3,11 +3,14 @@ import { cookies } from 'next/headers';
 import { hash, compare } from '../../../../lib/hash';
 import crypto from 'crypto'
 
-export async function POST(req){
-    try{
-        const {db} = await connectToDatabase();
+export async function POST(req) {
+    try {
+        const { db } = await connectToDatabase();
         const body = await req.json();
-        
+
+        // log api call
+        const apiCallsLog = await db.collection('apiCalls').updateOne({email: body.email}, {$inc: {login: 1}}, { upsert: true });
+
         // Validation errors object
         const errors = {};
 
@@ -31,7 +34,7 @@ export async function POST(req){
         //checks for existing user with same email
         const existingUser = await db.collection('users').findOne({ email: body.email });
         console.log(existingUser)
-        if(!existingUser){
+        if (!existingUser) {
             return Response.json({
                 success: false,
                 message: "User does not exist",
@@ -51,8 +54,8 @@ export async function POST(req){
         }
 
         const hashedSession = hash(crypto.randomBytes(32).toString("hex"));
-        const newSession = await db.collection('sessions').insertOne({email: body.email, token: hashedSession, expiry: new Date(Date.now() + 60 * 60 * 1000)})
-        
+        const newSession = await db.collection('sessions').insertOne({ email: body.email, token: hashedSession, expiry: new Date(Date.now() + 60 * 60 * 1000) })
+
         const cookieStore = await cookies();
         cookieStore.set({
             name: 'sessionToken',
@@ -71,7 +74,7 @@ export async function POST(req){
             formData: body
         }), { status: 200, headers: { "Content-Type": "application/json" } });
 
-    } catch(error) {
+    } catch (error) {
         console.log(error);
         return new Response(JSON.stringify({
             error: "Something went wrong"

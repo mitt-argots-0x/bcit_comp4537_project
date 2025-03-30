@@ -9,6 +9,9 @@ export async function PATCH(req) {
 
     const { db } = await connectToDatabase();
 
+    // log api call
+    const apiCallsLog = await db.collection('apiCalls').updateOne({email: body.email}, {$inc: {resetPassword: 1}});
+
     const user = await db.collection('users').findOne({ resetToken: token });
 
     if (!user) {

@@ -48,7 +48,12 @@ export async function POST(req) {
 
         //hash password with bcrypt
         const hashedPassword = hash(body.password);
+
+        // create user
         const newUser = await db.collection('users').insertOne({ email: body.email, password: hashedPassword, numcalls: 0 });
+
+        // create user api calls log
+        const apiCallsLog = await db.collection('apiCalls').insertOne({email: body.email,}, { $inc:{signup: 1}});
 
         //hash session token
         const hashedSession = hash(crypto.randomBytes(32).toString("hex"));

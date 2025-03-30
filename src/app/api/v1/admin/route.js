@@ -1,20 +1,30 @@
 import connectToDatabase from '../../../../lib/mongodb';
 export async function POST(req) {
-    try{
-        const {db} = await connectToDatabase();
+    try {
+        // connect to db
+        const { db } = await connectToDatabase();
         const body = await req.json();
-        const validSession = await db.collection('sessions').findOne({email: body.email, token: body.session});
+
+        // log api call
+        const apiCallsLog = await db.collection('apiCalls').updateOne({ email: body.email }, { $inc: { admin: 1 } });
+
+        // check valid session
+        const validSession = await db.collection('sessions').findOne({ email: body.email, token: body.session });
         if (!validSession) {
             return new Response(JSON.stringify({ error: "Invalid session" }), { status: 401 });
         }
 
-        const info = await db.collection('users').find({}, {projection: {email: 1, numcalls: 1, _id: 0}}).toArray();
+        // get all user info
+        const info = await db.collection('apiCalls').find({}, { projection: { email: 1, admin: 1, dashboard: 1, forgot: 1, game: 1, login: 1, resetPassword: 1, sendResetLink: 1, signout: 1, signup: 1, _id: 0 } }).toArray();
+
+        
         console.log(info);
+
         return new Response(JSON.stringify(info), {
             status: 200,
-            headers: {"Content-Type": "application/json"},
+            headers: { "Content-Type": "application/json" },
         })
-        
+
     } catch (error) {
         console.log(error)
         return new Response(JSON.stringify({

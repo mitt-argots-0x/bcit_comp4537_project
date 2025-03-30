@@ -10,6 +10,8 @@ export async function POST(req) {
     const body = await req.json();
     const { email } = body;
 
+    // log api call
+    const apiCallsLog = await db.collection('apiCalls').updateOne({email: body.email}, {$inc: {sendResetLink: 1}});
 
     const user = await db.collection('users').findOne({ email });
 
