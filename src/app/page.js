@@ -3,7 +3,6 @@ import { useEffect, useState } from 'react';
 import Layout from './components/Layout';
 
 export default function Home() {
-
   const [numCalls, setNumCalls] = useState(null);
     useEffect(() => {
         const email = sessionStorage.getItem("email")
@@ -17,9 +16,11 @@ export default function Home() {
                     body: JSON.stringify({email, session}),
                 })
 
+                // TODO Reroute
                 if (!response.ok) throw new Error("Failed to fetch data");
 
                 const data = await response.json();
+                console.log(data);
                 setNumCalls(data.numcalls);
 
             } catch(error){
