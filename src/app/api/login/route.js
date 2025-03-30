@@ -47,13 +47,17 @@ export async function POST(req){
         const correctPassword = compare(body.password, existingUser.password);
 
         if (!correctPassword) {
-            return Response.json({ success: false, message: 'Incorrect Password or Username!', formData: body }, { status: 401 })
+            return new Response(JSON.stringify({
+                message: "Login failure",
+                formData: body
+            }), { status: 400, headers: { "Content-Type": "application/json" } });
         }
 
         const hashedSession = hash(crypto.randomBytes(32).toString("hex"));
         const newSession = await db.collection('sessions').insertOne({email: body.email, token: hashedSession, expiry: new Date(Date.now() + 60 * 60 * 1000)})
         
-        await cookies().set({
+        const cookieStore = await cookies();
+        cookieStore.set({
             name: 'sessionToken',
             value: hashedSession,
             httpOnly: true,
@@ -62,6 +66,13 @@ export async function POST(req){
             secure: true,
             maxAge: 60 * 60 // 1 Hour
         });
+
+        return new Response(JSON.stringify({
+            message: "Login success",
+            email: body.email,
+            sessionToken: hashedSession,
+            formData: body
+        }), { status: 200, headers: { "Content-Type": "application/json" } });
 
     } catch(error) {
         console.log(error);
