@@ -45,7 +45,8 @@ const Game = () => {
   const [isWebSocketStarted, setIsWebSocketStarted] = useState(false);
   const [cameraPermission, setCameraPermission] = useState(null);
   const [cameraError, setCameraError] = useState(null);
-  const BACKEND_IP = "orca-app-a9bi7.ondigitalocean.app";
+  const BACKEND_IP = "urchin-app-n3wsd.ondigitalocean.app";
+  
   const router = useRouter();
 
   // Check Camera Permission
