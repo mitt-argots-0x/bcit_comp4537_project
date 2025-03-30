@@ -45,11 +45,6 @@ export default function Login() {
         return;
       }
 
-      sessionStorage.setItem("email", data.email);
-      
-      sessionStorage.setItem("sessionToken", data.sessionToken);
-      console.log(sessionStorage.getItem("sessionToken", data.sessionToken));
-
       if (data.email === "admin@admin.com") {
         router.push('/admin');
       } else {

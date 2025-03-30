@@ -5,7 +5,6 @@ export async function POST(req) {
     try {
         // connect to db
         const { db } = await connectToDatabase();
-        const body = await req.json();
 
         // log api call
         
