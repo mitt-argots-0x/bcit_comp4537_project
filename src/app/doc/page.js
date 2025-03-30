@@ -1,5 +1,5 @@
 'use client';
-
+// This document is AI generated
 export default function ApiDocs() {
     return (
         <div className="p-8 max-w-3xl mx-auto text-white bg-gray-900 min-h-screen">
