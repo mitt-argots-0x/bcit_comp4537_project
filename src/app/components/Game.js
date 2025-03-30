@@ -282,13 +282,22 @@ const Game = () => {
     };
 
     console.log("starting frame capture");
-    const interval = setInterval(captureFrame, 500);
+    const interval = setInterval(captureFrame, 100);
 
     return () => {
       console.log("Stopping frame capture");
       clearInterval(interval);
     };
   }, [ws, isWebSocketStarted]);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    const ctx = canvas?.getContext("2d");
+    if (!canvas || !ctx || detectedCards.length === 0) return;
+  
+    drawDetectionBoxes(ctx);
+  }, [detectedCards]);
+  
 
   return (
     <div className="flex flex-col items-center justify-center h-screen bg-gray-900 text-white">
