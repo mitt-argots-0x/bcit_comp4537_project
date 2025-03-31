@@ -63,5 +63,10 @@
             "success": "Password Reset!",
             "fail": "Error, please try again"
         }
+    },
+    "home": {
+        "title": "Blackjack Helper",
+        "subtitle": "Your smart assistant for every hit, stand, or double-down. Beat the odds with data-driven decisions.",
+        "cta": "Go to Dashboard"
     }
 }
