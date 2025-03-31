@@ -137,24 +137,34 @@ export default function ApiDocs() {
 
             <section className="mb-8">
                 <h2 className="text-2xl font-semibold mb-2">GET /api/v1/game</h2>
-                <p>Logs a game API usage and returns a simple confirmation message.</p>
+                <p>Increments the game API usage count for the authenticated user. Requires a valid session token stored in an HTTP-only cookie.</p>
 
-                <h3 className="font-semibold mt-2">Query Parameters:</h3>
-                <pre className="bg-gray-800 p-3 rounded text-sm">{`
-?email=string (required)
-`}</pre>
+                <h3 className="font-semibold mt-2">Request:</h3>
+                <p>No request body required. Session token is extracted from the HTTP-only cookie.</p>
 
-                <h3 className="font-semibold mt-2">Response (200):</h3>
+                <h3 className="font-semibold mt-2">Response (200) - Success:</h3>
                 <pre className="bg-gray-800 p-3 rounded text-sm">{`
 {
     "message": "Game API is running"
 }
 `}</pre>
 
-                <h3 className="font-semibold mt-2">Response (400):</h3>
+                <h3 className="font-semibold mt-2">Response (400) - Missing Session Token or Email:</h3>
                 <pre className="bg-gray-800 p-3 rounded text-sm">{`
 {
-    "error": "Missing email parameter"
+    "error": "No session token found"
+}
+`}</pre>
+                <pre className="bg-gray-800 p-3 rounded text-sm">{`
+{
+    "error": "Missing email"
+}
+`}</pre>
+
+                <h3 className="font-semibold mt-2">Response (404) - Session Not Found:</h3>
+                <pre className="bg-gray-800 p-3 rounded text-sm">{`
+{
+    "error": "Session not found"
 }
 `}</pre>
 
@@ -165,27 +175,51 @@ export default function ApiDocs() {
 }
 `}</pre>
             </section>
+
             <section className="mb-8">
                 <h2 className="text-2xl font-semibold mb-2">POST /api/v1/login</h2>
-                <p>Logs a login attempt, verifies user credentials, and returns a session token on success.</p>
+                <p>Authenticates a user by verifying their email and password. On successful login, a session token is created and stored as an HTTP-only cookie.</p>
 
                 <h3 className="font-semibold mt-2">Request Body:</h3>
                 <pre className="bg-gray-800 p-3 rounded text-sm">{`
 {
-    "email": "string",
+    "email": "user@example.com",
     "password": "string"
 }
 `}</pre>
 
-                <h3 className="font-semibold mt-2">Response (200):</h3>
+                <h3 className="font-semibold mt-2">Response (200) - Success:</h3>
                 <pre className="bg-gray-800 p-3 rounded text-sm">{`
 {
     "message": "Login success",
     "email": "user@example.com",
-    "sessionToken": "hashed_token",
+    "sessionToken": "string",
     "formData": {
         "email": "user@example.com",
-        "password": "******"
+        "password": "string"
+    }
+}
+`}</pre>
+
+                <h3 className="font-semibold mt-2">Response (400) - User Not Found:</h3>
+                <pre className="bg-gray-800 p-3 rounded text-sm">{`
+{
+    "success": false,
+    "message": "User does not exist",
+    "formData": {
+        "email": "user@example.com",
+        "password": "string"
+    }
+}
+`}</pre>
+
+                <h3 className="font-semibold mt-2">Response (400) - Invalid Password:</h3>
+                <pre className="bg-gray-800 p-3 rounded text-sm">{`
+{
+    "message": "Login failure",
+    "formData": {
+        "email": "user@example.com",
+        "password": "string"
     }
 }
 `}</pre>
@@ -199,23 +233,6 @@ export default function ApiDocs() {
         "email": "user@example.com",
         "password": ""
     }
-}
-`}</pre>
-
-                <h3 className="font-semibold mt-2">Response (400) - User does not exist:</h3>
-                <pre className="bg-gray-800 p-3 rounded text-sm">{`
-{
-    "success": false,
-    "message": "User does not exist",
-    "formData": { ... }
-}
-`}</pre>
-
-                <h3 className="font-semibold mt-2">Response (400) - Incorrect Password:</h3>
-                <pre className="bg-gray-800 p-3 rounded text-sm">{`
-{
-    "message": "Login failure",
-    "formData": { ... }
 }
 `}</pre>
 
@@ -337,20 +354,15 @@ export default function ApiDocs() {
             </section>
             <section className="mb-8">
                 <h2 className="text-2xl font-semibold mb-2">DELETE /api/v1/signout</h2>
-                <p>Logs the user out by deleting the session token and clearing the session cookie.</p>
+                <p>Logs the user out by deleting their session token from the database and clearing the session cookie.</p>
 
-                <h3 className="font-semibold mt-2">Request Body:</h3>
-                <pre className="bg-gray-800 p-3 rounded text-sm">{`
-{
-    "email": "string"
-}
-`}</pre>
+                <h3 className="font-semibold mt-2">Request:</h3>
+                <p>No request body required. Session token is extracted from the HTTP-only cookie.</p>
 
                 <h3 className="font-semibold mt-2">Response (200) - Success:</h3>
                 <pre className="bg-gray-800 p-3 rounded text-sm">{`
 {
-    "message": "Sign out success",
-    "email": "user@example.com"
+    "message": "Sign out success"
 }
 `}</pre>
 
@@ -358,6 +370,13 @@ export default function ApiDocs() {
                 <pre className="bg-gray-800 p-3 rounded text-sm">{`
 {
     "error": "No session token found"
+}
+`}</pre>
+
+                <h3 className="font-semibold mt-2">Response (404) - Session Not Found:</h3>
+                <pre className="bg-gray-800 p-3 rounded text-sm">{`
+{
+    "error": "Session not found"
 }
 `}</pre>
 
