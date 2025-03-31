@@ -1,6 +1,6 @@
 'use client'
 import { useEffect, useState } from 'react'
-import { Disclosure, DisclosureButton, DisclosurePanel} from '@headlessui/react'
+import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/react'
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
 import { TbCards } from 'react-icons/tb'
 import { useRouter } from 'next/navigation';
@@ -22,10 +22,13 @@ export default function NavBar() {
   ]
 
   useEffect(() => {
-    if(sessionStorage.getItem('sessionToken')){
-      setShowSignOut(true);
-    }
-  },[]);
+    const checkSession = async () => {
+      const res = await fetch('/api/v1/session');
+      const data = await res.json();
+      setShowSignOut(data.isLoggedIn);
+    };
+    checkSession();
+  }, []);
 
   const signOut = async (e) => {
     e.preventDefault();
@@ -43,8 +46,8 @@ export default function NavBar() {
         return;
       }
 
-      sessionStorage.removeItem("email", data.email);
-      sessionStorage.removeItem("sessionToken", data.sessionToken);
+      sessionStorage.removeItem("email");
+      sessionStorage.removeItem("sessionToken");
       setShowSignOut(false);
       router.push('/')
     } catch (error) {
@@ -53,7 +56,7 @@ export default function NavBar() {
   }
   return (
     <Disclosure as="nav" className="bg-gray-800">
-      <ToastContainer position='bottom-left'/>
+      <ToastContainer position='bottom-left' />
       <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
         <div className="relative flex h-16 items-center justify-between">
           <div className="absolute inset-y-0 left-0 flex items-center sm:hidden">

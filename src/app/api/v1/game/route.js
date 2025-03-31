@@ -6,7 +6,7 @@ export async function GET(req) {
     const { db } = await connectToDatabase();
 
     const email = req.nextUrl.searchParams.get('email');
-
+    
     if (!email) {
         return NextResponse.json({ error: "Missing email parameter" }, { status: 400 });
     }
