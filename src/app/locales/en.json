@@ -68,5 +68,33 @@
         "title": "Blackjack Helper",
         "subtitle": "Your smart assistant for every hit, stand, or double-down. Beat the odds with data-driven decisions.",
         "cta": "Go to Dashboard"
+    },
+    "admin": {
+        "httpMethods": {
+            "post": "POST",
+            "get": "GET",
+            "patch": "PATCH",
+            "delete": "DELETE"
+        },
+        "endpointsReport": {
+            "methodLabel": "Method",
+            "endpointLabel": "Endpoint",
+            "requestsLabel": "Requests",
+            "title": "Endpoints Report",
+            "admin": "/api/v1/admin",
+            "dashboard": "/api/1/dashboard",
+            "login": "/api/v1/login",
+            "forgot": "/api/v1/forgot",
+            "resetPassword": "/api/v1/reset-password",
+            "resetLink": "/api/v1/send-reset-link",
+            "signout": "/api/v1/signout",
+            "signup": "/api/v1/signup",
+            "game": "/api/v1/game"
+        },
+        "userReport": {
+            "title": "Users Report",
+            "emailLabel": "Email",
+            "requestsLabel": "Total Requests"
+        }
     }
 }

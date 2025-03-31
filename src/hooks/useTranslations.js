@@ -1,4 +1,5 @@
 import translations from '../app/locales/en.json';
+// ChatGPT was used to help the creation of file
 
 export function useTranslations(namespace) {
   return (key, vars = {}) => {

@@ -1,7 +1,9 @@
 'use client'
 // used AI here to help with writing and debugging the loops (Steven)
+// used AI here to help with styling
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { useTranslations } from '@/hooks/useTranslations';
 
 export default function Admin() {
     const [userInfo, setUserInfo] = useState(null);
@@ -17,6 +19,7 @@ export default function Admin() {
         signupReq: 0,
     });
     const router = useRouter();
+    const t = useTranslations('admin');
 
     useEffect(() => {
         const getInfo = async () => {
@@ -74,40 +77,52 @@ export default function Admin() {
 
     return (
         <>
-            <h2>Your endpoints report:</h2>
-            <table className = 'gap-2 p-3' >
-                <thead>
-                    <tr>
-                        <th>Method</th>
-                        <th>Endpoint</th>
-                        <th>Requests</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr><td>POST</td><td>/api/v1/admin</td><td>{totals.adminReq}</td></tr>
-                    <tr><td>POST</td><td>/api/v1/dashboard</td><td>{totals.dashboardReq}</td></tr>
-                    <tr><td>POST</td><td>/api/v1/forgot</td><td>{totals.forgotReq}</td></tr>
-                    <tr><td>GET</td><td>/api/v1/game</td><td>{totals.gameReq}</td></tr>
-                    <tr><td>POST</td><td>/api/v1/login</td><td>{totals.loginReq}</td></tr>
-                    <tr><td>PATCH</td><td>/api/v1/reset-password</td><td>{totals.resetPasswordReq}</td></tr>
-                    <tr><td>POST</td><td>/api/v1/send-reset-link</td><td>{totals.sendResetLinkReq}</td></tr>
-                    <tr><td>DELETE</td><td>/api/v1/signout</td><td>{totals.signoutReq}</td></tr>
-                    <tr><td>POST</td><td>/api/v1/signup</td><td>{totals.signupReq}</td></tr>
-                </tbody>
-            </table>
+            <main className="min-h-screen bg-gray-900 text-white py-10 px-4">
+            <div className="max-w-5xl mx-auto space-y-10 animate-fade-in-slow">
+                <section>
+                    <h2 className="text-3xl font-bold mb-4 text-indigo-400">{t('endpointsReport.title')}</h2>
+                    <div className="overflow-x-auto rounded-lg shadow-lg">
+                        <table className="min-w-full bg-gray-800 rounded-md overflow-hidden text-sm md:text-base">
+                            <thead className="bg-gray-700 text-indigo-300">
+                                <tr>
+                                    <th className="py-2 px-4 text-left">{t('endpointsReport.methodLabel')}</th>
+                                    <th className="py-2 px-4 text-left">{t('endpointsReport.endpointLabel')}</th>
+                                    <th className="py-2 px-4 text-center">{t('endpointsReport.requestsLabel')}</th>
+                                </tr>
+                            </thead>
+                            <tbody className="divide-y divide-gray-700">
+                                <tr><td className="py-2 px-4">{t('httpMethods.post')}</td><td className="py-2 px-4">{t('endpointsReport.admin')}</td><td className="py-2 px-4 text-center">{totals.adminReq}</td></tr>
+                                <tr><td className="py-2 px-4">{t('httpMethods.post')}</td><td className="py-2 px-4">{t('endpointsReport.dashboard')}</td><td className="py-2 px-4 text-center">{totals.dashboardReq}</td></tr>
+                                <tr><td className="py-2 px-4">{t('httpMethods.post')}</td><td className="py-2 px-4">{t('endpointsReport.forgot')}</td><td className="py-2 px-4 text-center">{totals.forgotReq}</td></tr>
+                                <tr><td className="py-2 px-4">{t('httpMethods.get')}</td><td className="py-2 px-4">{t('endpointsReport.game')}</td><td className="py-2 px-4 text-center">{totals.gameReq}</td></tr>
+                                <tr><td className="py-2 px-4">{t('httpMethods.post')}</td><td className="py-2 px-4">{t('endpointsReport.login')}</td><td className="py-2 px-4 text-center">{totals.loginReq}</td></tr>
+                                <tr><td className="py-2 px-4">{t('httpMethods.patch')}</td><td className="py-2 px-4">{t('endpointsReport.resetPassword')}</td><td className="py-2 px-4 text-center">{totals.resetPasswordReq}</td></tr>
+                                <tr><td className="py-2 px-4">{t('httpMethods.post')}</td><td className="py-2 px-4">{t('endpointsReport.resetLink')}</td><td className="py-2 px-4 text-center">{totals.sendResetLinkReq}</td></tr>
+                                <tr><td className="py-2 px-4">{t('httpMethods.delete')}</td><td className="py-2 px-4">{t('endpointsReport.signout')}</td><td className="py-2 px-4 text-center">{totals.signoutReq}</td></tr>
+                                <tr><td className="py-2 px-4">{t('httpMethods.post')}</td><td className="py-2 px-4">{t('endpointsReport.signup')}</td><td className="py-2 px-4 text-center">{totals.signupReq}</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
 
-            <h2>Your users report:</h2>
-            <table className = 'gap-2 p-3'>
-                <thead>
-                    <tr>
-                        <th>Email</th>
-                        <th>Requests</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {userInfo}
-                </tbody>
-            </table>
+                <section>
+                    <h2 className="text-3xl font-bold mb-4 text-indigo-400">{t('userReport.title')}</h2>
+                    <div className="overflow-x-auto rounded-lg shadow-lg">
+                        <table className="min-w-full bg-gray-800 text-sm md:text-base rounded-md overflow-hidden">
+                            <thead className="bg-gray-700 text-indigo-300">
+                                <tr>
+                                    <th className="py-2 px-4 text-left">{t('userReport.emailLabel')}</th>
+                                    <th className="py-2 px-4 text-center">{t('userReport.requestsLabel')}</th>
+                                </tr>
+                            </thead>
+                            <tbody className="divide-y divide-gray-700 gap-5">
+                                {userInfo}
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+            </div>
+        </main>
         </>
     );
 }
