@@ -8,6 +8,19 @@ export async function POST(req) {
         const { db } = await connectToDatabase();
         const body = await req.json();
 
+        //checks for existing user with same email
+        const existingUser = await db.collection('users').findOne({ email: body.email });
+        console.log(existingUser)
+        if (!existingUser) {
+            return Response.json({
+                success: false,
+                message: "User does not exist",
+                formData: body
+            },
+                { status: 400, headers: { "Content-Type": "application/json" } }
+            );
+        }
+
         // log api call
         const apiCallsLog = await db.collection('apiCalls').updateOne({email: body.email}, {$inc: {login: 1}}, { upsert: true });
 
@@ -31,18 +44,18 @@ export async function POST(req) {
 
         console.log(errors.length)
 
-        //checks for existing user with same email
-        const existingUser = await db.collection('users').findOne({ email: body.email });
-        console.log(existingUser)
-        if (!existingUser) {
-            return Response.json({
-                success: false,
-                message: "User does not exist",
-                formData: body
-            },
-                { status: 400, headers: { "Content-Type": "application/json" } }
-            );
-        }
+        // //checks for existing user with same email
+        // const existingUser = await db.collection('users').findOne({ email: body.email });
+        // console.log(existingUser)
+        // if (!existingUser) {
+        //     return Response.json({
+        //         success: false,
+        //         message: "User does not exist",
+        //         formData: body
+        //     },
+        //         { status: 400, headers: { "Content-Type": "application/json" } }
+        //     );
+        // }
 
         const correctPassword = compare(body.password, existingUser.password);
 
