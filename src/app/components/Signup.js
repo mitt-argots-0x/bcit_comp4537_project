@@ -52,8 +52,6 @@ export default function Signup() {
         setMessage(data.message);
         setFormData({ email: "", password: "", confirmPassword: "" }); // Clear form on success
         sessionStorage.removeItem("formData"); // Clear stored data on successful submission
-        sessionStorage.setItem("email", data.email);
-        sessionStorage.setItem("sessionToken", data.sessionToken);
         router.push('/dashboard');
       }
     } catch (error) {

@@ -308,6 +308,34 @@ export default function ApiDocs() {
 `}</pre>
             </section>
             <section className="mb-8">
+                <h2 className="text-2xl font-semibold mb-2">GET /api/v1/session</h2>
+                <p>Checks if the user has a valid session token stored in an HTTP-only cookie.</p>
+
+                <h3 className="font-semibold mt-2">Request:</h3>
+                <p>No request body required.</p>
+
+                <h3 className="font-semibold mt-2">Response (200) - Session Active:</h3>
+                <pre className="bg-gray-800 p-3 rounded text-sm">{`
+{
+    "isLoggedIn": true
+}
+`}</pre>
+
+                <h3 className="font-semibold mt-2">Response (200) - No Session:</h3>
+                <pre className="bg-gray-800 p-3 rounded text-sm">{`
+{
+    "isLoggedIn": false
+}
+`}</pre>
+
+                <h3 className="font-semibold mt-2">Response (500):</h3>
+                <pre className="bg-gray-800 p-3 rounded text-sm">{`
+{
+    "error": "Something went wrong"
+}
+`}</pre>
+            </section>
+            <section className="mb-8">
                 <h2 className="text-2xl font-semibold mb-2">DELETE /api/v1/signout</h2>
                 <p>Logs the user out by deleting the session token and clearing the session cookie.</p>
 

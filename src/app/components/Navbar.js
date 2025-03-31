@@ -36,7 +36,6 @@ export default function NavBar() {
       const response = await fetch("/api/v1/signout", {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: sessionStorage.getItem('email') }),
       });
 
       const data = await response.json();
@@ -46,8 +45,6 @@ export default function NavBar() {
         return;
       }
 
-      sessionStorage.removeItem("email");
-      sessionStorage.removeItem("sessionToken");
       setShowSignOut(false);
       router.push('/')
     } catch (error) {

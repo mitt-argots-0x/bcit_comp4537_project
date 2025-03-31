@@ -213,8 +213,7 @@ const Game = () => {
 
       const socket = new WebSocket(backendURL);
 
-      const email = sessionStorage.getItem("email");
-      const res = await fetch(`/api/v1/game?email=${email}`, {
+      const res = await fetch(`/api/v1/game`, {
           method: 'GET',
           headers: { 'Content-Type': 'application/json' },
       });

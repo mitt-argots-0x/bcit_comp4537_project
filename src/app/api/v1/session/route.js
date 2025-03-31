@@ -1,4 +1,3 @@
-// /api/v1/session
 import { cookies } from 'next/headers';
 
 export async function GET(req) {
