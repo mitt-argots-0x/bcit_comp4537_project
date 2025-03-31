@@ -47,9 +47,24 @@ export default function Dashboard() {
     return(
         <>
         <ToastContainer />
-        <h1>{t('header.title', { name: userEmail || 'User'})}</h1>
+        {/* <h1>{t('header.title', { name: userEmail || 'User'})}</h1>
         <p>{t('header.subtitle')}</p>
-        <p>{t('stats.usage', { tokens: numCalls })}</p>
+        <p>{t('stats.usage', { tokens: numCalls })}</p> */}
+        <div className="min-h-screen flex items-center justify-center px-4">
+            <div className="w-full max-w-md bg-gray-800 rounded-xl shadow-lg p-8 space-y-6">
+                <h1 className="text-3xl font-bold text-center text-white">{t('header.title')}</h1>
+
+                <div className="text-center">
+                <p className="text-lg text-white">{t('header.subtitle')}</p>
+                <p className="text-xl font-semibold text-amber-300">{userEmail}</p>
+            </div>
+
+            <div className="flex flex-col items-center">
+            <p className="text-lg text-white">{t('header.apiCalls')}</p>
+            <p className="text-4xl font-bold text-amber-300">{numCalls}</p>
+            </div>
+        </div>
+        </div>
         </>
     )
 }

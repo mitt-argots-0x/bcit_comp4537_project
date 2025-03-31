@@ -1,8 +1,9 @@
 {
     "dashboard": {
         "header": {
-            "title": "Welcome Back, {{name}}",
-            "subtitle": "Welcome to your dashboard!"
+            "title": "Blackjack Helper",
+            "subtitle": "Welcome back,",
+            "apiCalls": "API Calls Made:"
         },
         "stats": {
             "usage": "You have used {{tokens}} out of your limit of 20"
