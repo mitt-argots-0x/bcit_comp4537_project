@@ -21,9 +21,6 @@ export async function POST(req) {
             );
         }
 
-        // log api call
-        const apiCallsLog = await db.collection('apiCalls').updateOne({email: body.email}, {$inc: {login: 1}}, { upsert: true });
-
         // Validation errors object
         const errors = {};
 
@@ -65,6 +62,9 @@ export async function POST(req) {
                 formData: body
             }), { status: 400, headers: { "Content-Type": "application/json" } });
         }
+
+        // log api call
+        const apiCallsLog = await db.collection('apiCalls').updateOne({email: body.email}, {$inc: {login: 1}}, { upsert: true });
 
         const hashedSession = hash(crypto.randomBytes(32).toString("hex"));
         const newSession = await db.collection('sessions').insertOne({ email: body.email, token: hashedSession, expiry: new Date(Date.now() + 60 * 60 * 1000) })
