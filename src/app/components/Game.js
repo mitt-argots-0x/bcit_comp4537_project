@@ -45,7 +45,7 @@ const Game = () => {
   const [isWebSocketStarted, setIsWebSocketStarted] = useState(false);
   const [cameraPermission, setCameraPermission] = useState(null);
   const [cameraError, setCameraError] = useState(null);
-  const BACKEND_IP = "urchin-app-n3wsd.ondigitalocean.app";
+  const BACKEND_IP = "sea-lion-app-oqerq.ondigitalocean.app";
   
   const router = useRouter();
 
