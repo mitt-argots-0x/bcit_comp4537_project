@@ -115,13 +115,23 @@ const Game = () => {
 
       const selectedCamera = videoDevices[videoDevices.length - 1].deviceId;
 
+      // const constraints = {
+      //   video: {
+      //     deviceId: selectedCamera ? { ideal: selectedCamera } : undefined,
+      //     width: { ideal: 640 },
+      //     height: { ideal: 480 },
+      //   },
+      // };
+
       const constraints = {
         video: {
-          deviceId: selectedCamera ? { ideal: selectedCamera } : undefined,
-          width: { ideal: 640 },
-          height: { ideal: 480 },
-        },
+          facingMode: "environment",
+          width: { ideal: 1280 },
+          height: { ideal: 720 },
+        }
       };
+      
+      
 
       const stream = await navigator.mediaDevices.getUserMedia(constraints);
 
@@ -267,20 +277,26 @@ const Game = () => {
     }
 
     const captureFrame = () => {
-      canvas.toBlob(
+      const sourceCanvas = canvasRef.current;
+      const offscreen = document.createElement("canvas");
+      offscreen.width = 640;
+      offscreen.height = 480;
+    
+      const ctx = offscreen.getContext("2d");
+      ctx.drawImage(sourceCanvas, 0, 0, 640, 480); 
+      
+      offscreen.toBlob(
         async (blob) => {
           if (blob && ws.readyState === WebSocket.OPEN) {
             const arrayBuffer = await blob.arrayBuffer();
             ws.send(arrayBuffer);
-            console.log("Sent frame (binary)");
-          } else {
-            console.warn("WebSocket not ready, skipping frame");
           }
         },
         "image/jpeg",
         0.8
       );
     };
+    
 
     console.log("starting frame capture");
     const interval = setInterval(captureFrame, 100);
