@@ -40,7 +40,6 @@ export async function DELETE(req){
 
         return new Response(JSON.stringify({
             message: "Sign out success",
-            email: body.email,
         }), { status: 200, headers: { "Content-Type": "application/json" } });
 
     } catch(error) {
